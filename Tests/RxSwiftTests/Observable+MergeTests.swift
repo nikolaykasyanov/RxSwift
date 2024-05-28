@@ -2068,10 +2068,14 @@ extension ObservableMergeTest {
 
         var object = Optional.some(TestObject())
 
+        let inner = Observable<Int>.create { [object] observer in
+            _ = object
+            return xs.subscribe(observer)
+        }
+
         let disposable =  xs
-            .flatMap { [object] _ in
-                _ = object
-                return Observable<Never>.never()
+            .flatMap {_ in
+                Observable<Never>.never()
             }
             .subscribe()
         defer {
